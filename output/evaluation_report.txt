@@ -1,0 +1,285 @@
+==================================================
+          MALWARE DETECTOR EVALUATION REPORT      
+==================================================
+Total Evaluated Samples: 1797
+  Benign Samples       : 993
+  Malware Samples      : 804
+--------------------------------------------------
+True Positives (TP)    : 760
+False Negatives (FN)   : 44
+True Negatives (TN)    : 949
+False Positives (FP)   : 44
+--------------------------------------------------
+Accuracy               : 0.9510
+Precision              : 0.9453
+Recall                 : 0.9453
+F1 Score               : 0.9453
+==================================================
+
+False Positives Details:
+  Hash: 10405f94feb20f164337e35919324c191dd6129a849ee4961e79e0c0d793599b | Name: aitstatic.exe | Score: 85
+    Details: ['High section entropy: 7.7367', "Single evasion/debugging API: ['IsDebuggerPresent']", 'Suspicious strings count: 12']
+    Behaviors: [{'behavior': 'Evasion / Packing', 'indicators': ['Entropy: 7.7367']}, {'behavior': 'Evasion / Anti-Debugging', 'indicators': ["APIs: ['IsDebuggerPresent']"]}, {'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [80, 23, 21, 53, 22, 25]']}]
+  Hash: 668dd96d3b873ba683e607bd99ac32fc107e830945c23118ab8f226ed32a0cf1 | Name: ApplyTrustOffline.exe | Score: 75
+    Details: ['Behavior FSM threat state reached: INJECTING (+15 points)', 'VirtualAlloc with multiple evasion/enumeration APIs', "Multiple evasion/debugging APIs: ['NtQueryInformationProcess', 'IsDebuggerPresent']", 'Dynamic API resolution pattern (GetProcAddress + LoadLibrary + VirtualAlloc)']
+    Behaviors: [{'behavior': 'Process Injection / Hollowing', 'indicators': ["APIs: ['VirtualAlloc']"]}, {'behavior': 'Evasion / Anti-Debugging', 'indicators': ["APIs: ['NtQueryInformationProcess', 'IsDebuggerPresent']"]}, {'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [80, 23, 21, 53, 22, 25]']}]
+  Hash: badf4752413cb0cbdc03fb95820ca167f0cdc63b597ccdb5ef43111180e088b0 | Name: cmd.exe | Score: 95
+    Details: ['Behavior FSM threat state reached: INJECTING (+15 points)', "Process Injection APIs: ['ResumeThread', 'VirtualAlloc']", "Multiple evasion/debugging APIs: ['NtQueryInformationProcess', 'IsDebuggerPresent']", 'Dynamic API resolution pattern (GetProcAddress + LoadLibrary + VirtualAlloc)']
+    Behaviors: [{'behavior': 'Process Injection / Hollowing', 'indicators': ["APIs: ['ResumeThread', 'VirtualAlloc']"]}, {'behavior': 'Evasion / Anti-Debugging', 'indicators': ["APIs: ['NtQueryInformationProcess', 'IsDebuggerPresent']"]}, {'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [53, 22, 23]']}]
+  Hash: 33408b1f7f5c4325960040e2b643f444311d200add17bf4b7fc072a50f93f6f3 | Name: dbgeng.dll | Score: 50
+    Details: ['Behavior FSM threat state reached: INJECTING (+15 points)', "Multiple Process Injection APIs: ['WriteProcessMemory', 'CreateRemoteThread', 'ResumeThread', 'VirtualAlloc', 'VirtualAllocEx']", "Single evasion/debugging API: ['IsDebuggerPresent']", 'Dynamic API resolution pattern (GetProcAddress + LoadLibrary + VirtualAlloc)', 'Suspicious strings count: 2', 'Minor library discount: 6 functions exported', 'Complexity discount: 43 DLLs imported', 'Modern Windows SDK discount: 36 API-set DLLs imported']
+    Behaviors: [{'behavior': 'Process Injection / Hollowing', 'indicators': ["APIs: ['WriteProcessMemory', 'CreateRemoteThread', 'ResumeThread', 'VirtualAlloc', 'VirtualAllocEx']"]}, {'behavior': 'Evasion / Anti-Debugging', 'indicators': ["APIs: ['IsDebuggerPresent']"]}, {'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [80, 23, 21, 53, 22, 25]']}]
+  Hash: e22efbed005f758d3f3aa1de21f1d908c499de5447f74636c8f57d12f0933b5c | Name: DHolographicDisplay.dll | Score: 55
+    Details: ['Extremely high section entropy: 7.97 (encrypted/packed)', "Single evasion/debugging API: ['IsDebuggerPresent']"]
+    Behaviors: [{'behavior': 'Evasion / Packing', 'indicators': ['Entropy: 7.9700']}, {'behavior': 'Evasion / Anti-Debugging', 'indicators': ["APIs: ['IsDebuggerPresent']"]}, {'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [80, 23, 21, 53, 22, 25, 445]']}]
+  Hash: 65f6b4e1dc98ba62bc8fc77891caffd4253d445884861f8b3b9c74e223498f23 | Name: dnslookup.dll | Score: 65
+    Details: ['Extremely few imports: 1 functions (likely packed)', '.NET executable']
+    Behaviors: [{'behavior': 'Evasion / Packing', 'indicators': ['Low imports count: 1']}, {'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [25]']}]
+  Hash: 67a5e50ddb60b465810756644cb7886c91a75094db1c117721eaba23a39bfd9c | Name: DWWIN.EXE | Score: 115
+    Details: ['Behavior FSM threat state reached: INJECTING (+15 points)', "Multiple Process Injection APIs: ['WriteProcessMemory', 'VirtualAlloc', 'VirtualAllocEx']", "Single process enumeration API: ['CreateToolhelp32Snapshot']", "Multiple evasion/debugging APIs: ['NtQueryInformationProcess', 'IsDebuggerPresent']", 'Dynamic API resolution pattern (GetProcAddress + LoadLibrary + VirtualAlloc)']
+    Behaviors: [{'behavior': 'Process Injection / Hollowing', 'indicators': ["APIs: ['WriteProcessMemory', 'VirtualAlloc', 'VirtualAllocEx']"]}, {'behavior': 'Evasion / Anti-Debugging', 'indicators': ["APIs: ['NtQueryInformationProcess', 'IsDebuggerPresent']"]}, {'behavior': 'Process Enumeration & Survey', 'indicators': ["APIs: ['CreateToolhelp32Snapshot']"]}, {'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [80, 21, 53]']}]
+  Hash: 8d44ccff806fb3b962629778a776a4f148ccbbbe7aced5dae097118b46daaa04 | Name: lapspsh.dll | Score: 85
+    Details: ['Extremely few imports: 1 functions (likely packed)', 'Suspicious strings count: 1', 'Obfuscated/Suspicious .NET executable']
+    Behaviors: [{'behavior': 'Evasion / Packing', 'indicators': ['Low imports count: 1']}, {'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [25, 21, 22, 23]']}]
+  Hash: 13cb258778411c5edc47732f36078f04845312e82f0043017e48891af9b29be4 | Name: MBR2GPT.EXE | Score: 75
+    Details: ['Behavior FSM threat state reached: INJECTING (+15 points)', 'VirtualAlloc with multiple evasion/enumeration APIs', "Multiple evasion/debugging APIs: ['NtQueryInformationProcess', 'IsDebuggerPresent']", 'Dynamic API resolution pattern (GetProcAddress + LoadLibrary + VirtualAlloc)']
+    Behaviors: [{'behavior': 'Process Injection / Hollowing', 'indicators': ["APIs: ['VirtualAlloc']"]}, {'behavior': 'Evasion / Anti-Debugging', 'indicators': ["APIs: ['NtQueryInformationProcess', 'IsDebuggerPresent']"]}, {'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [21, 53, 22, 23]']}]
+  Hash: e66eff4b7e2aaa07df01c6aafeaccd64cedae580e470e3251f2bdb3fe2ee5616 | Name: Microsoft.BitLocker.Structures.dll | Score: 65
+    Details: ['Extremely few imports: 1 functions (likely packed)', '.NET executable']
+    Behaviors: [{'behavior': 'Evasion / Packing', 'indicators': ['Low imports count: 1']}]
+  Hash: 751dc7c6efe6c1eee912d86c516d605213df7bc97b5dab452b5bd9a25c7ea66a | Name: Microsoft.Dism.PowerShell.dll | Score: 125
+    Details: ['Zero imports table (extreme anomaly, packed/shellcode)', 'Extremely high ADD instruction ratio: 52.85%', 'Suspicious strings count: 6']
+    Behaviors: [{'behavior': 'Evasion / Packing', 'indicators': ['Low imports count: 0']}, {'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [80, 25, 22, 23]']}]
+  Hash: 12093303e9347e6107cc61abc20c4fb40c711af2ef120d6414394c37ba831e71 | Name: Microsoft.Dism.Powershell.Resources.dll | Score: 105
+    Details: ['Extremely few imports: 1 functions (likely packed)', 'Suspicious strings count: 3', 'Obfuscated/Suspicious .NET executable']
+    Behaviors: [{'behavior': 'Evasion / Packing', 'indicators': ['Low imports count: 1']}]
+  Hash: 48a6103208551cb314a6b47add173b25b966e0f87e21b896d552111ad00e469c | Name: Microsoft.Dtc.PowerShell.Resources.dll | Score: 115
+    Details: ['Extremely few imports: 1 functions (likely packed)', 'Suspicious strings count: 4', 'Obfuscated/Suspicious .NET executable']
+    Behaviors: [{'behavior': 'Evasion / Packing', 'indicators': ['Low imports count: 1']}]
+  Hash: 0be673f908db6847d26ad57d201edc9bafb7bdea8aca8bcd4ba0a7f97472399d | Name: Microsoft.LanguagePackManagement.Powershell.Commands.dll | Score: 65
+    Details: ['Extremely high ADD instruction ratio: 48.51%', 'Suspicious strings count: 7']
+    Behaviors: [{'behavior': 'Evasion / Packing', 'indicators': ['Low imports count: 0']}]
+  Hash: 0eb217b943adf9df96b28448b9e0bbc844b1b544d33ae5f3c0c6b37814d2e513 | Name: Microsoft.LanguagePackManagement.Powershell.Commands.Resources.dll | Score: 105
+    Details: ['Extremely few imports: 1 functions (likely packed)', 'Suspicious strings count: 3', 'Obfuscated/Suspicious .NET executable']
+    Behaviors: [{'behavior': 'Evasion / Packing', 'indicators': ['Low imports count: 1']}]
+  Hash: bacea1949b53cd815536d05018bb4b270f4fb6acfe6dd8fdf3526e5c0a7391ee | Name: Microsoft.PowerShell.DSC.FileDownloadManager.dll | Score: 120
+    Details: ['Extremely few imports: 1 functions (likely packed)', 'Suspicious strings count: 6', 'Obfuscated/Suspicious .NET executable']
+    Behaviors: [{'behavior': 'Evasion / Packing', 'indicators': ['Low imports count: 1']}]
+  Hash: d8cb702f8cec49ce798c8027056165161e68c67c797cc3eb90f035fd6514a592 | Name: Microsoft.PowerShell.DSC.FileDownloadManager.Resources.dll | Score: 105
+    Details: ['Extremely few imports: 1 functions (likely packed)', 'Suspicious strings count: 3', 'Obfuscated/Suspicious .NET executable']
+    Behaviors: [{'behavior': 'Evasion / Packing', 'indicators': ['Low imports count: 1']}]
+  Hash: 52f2e80c3fec63ac22401a41964a3b0d78e7e9f6ed2b470638540c8c8f17c11f | Name: Microsoft.PowerShell.LocalAccounts.dll | Score: 120
+    Details: ['Extremely few imports: 1 functions (likely packed)', 'Suspicious strings count: 15', 'Obfuscated/Suspicious .NET executable']
+    Behaviors: [{'behavior': 'Evasion / Packing', 'indicators': ['Low imports count: 1']}, {'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [53]']}]
+  Hash: 5422a9adca7189776b55d0fb28233a137ff36efbdaa39e71171556d2f6cacb78 | Name: Microsoft.PowerShell.LocalAccounts.Resources.dll | Score: 105
+    Details: ['Extremely few imports: 1 functions (likely packed)', 'Suspicious strings count: 3', 'Obfuscated/Suspicious .NET executable']
+    Behaviors: [{'behavior': 'Evasion / Packing', 'indicators': ['Low imports count: 1']}]
+  Hash: aa69f5435c32d07429de6389a6f5def7f222a572a28e6dd46e22d9c7227bfe93 | Name: Microsoft.Storage.PersistentMemory.Management.Commands.Resources.dll | Score: 65
+    Details: ['Extremely few imports: 1 functions (likely packed)', '.NET executable']
+    Behaviors: [{'behavior': 'Evasion / Packing', 'indicators': ['Low imports count: 1']}]
+  Hash: 274ab9d5c70440808954b71f5ae6f8d7d32e89bd0fd397c6946b03a1cbfa822b | Name: Microsoft.Windows.AppBackgroundTask.Commands.dll | Score: 65
+    Details: ['Extremely few imports: 1 functions (likely packed)', '.NET executable']
+    Behaviors: [{'behavior': 'Evasion / Packing', 'indicators': ['Low imports count: 1']}]
+  Hash: 462514e1cd6734dfeb28ffdbd9a5f437b314492506c68e82df17cf11c5d27dcc | Name: Microsoft.Windows.DeliveryOptimization.AdminCommands.dll | Score: 120
+    Details: ['Extremely few imports: 1 functions (likely packed)', 'Suspicious strings count: 13', 'Obfuscated/Suspicious .NET executable']
+    Behaviors: [{'behavior': 'Evasion / Packing', 'indicators': ['Low imports count: 1']}, {'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [25, 21]']}]
+  Hash: 7b28bb79b3d8b6b2643534af2f79c7b3cd318187838b08b82238b7abcfab2a97 | Name: Microsoft.Windows.Firewall.Commands.dll | Score: 65
+    Details: ['Extremely few imports: 1 functions (likely packed)', '.NET executable']
+    Behaviors: [{'behavior': 'Evasion / Packing', 'indicators': ['Low imports count: 1']}]
+  Hash: d37a2e60534cb02908f2354e2f7acac04386d8637d849d071c0cf338f802527c | Name: Microsoft.Windows.Firewall.Commands.Resources.dll | Score: 65
+    Details: ['Extremely few imports: 1 functions (likely packed)', '.NET executable']
+    Behaviors: [{'behavior': 'Evasion / Packing', 'indicators': ['Low imports count: 1']}]
+  Hash: 47b216bc34f96363f07948b77560923e2807992c123148b47e43f8f7ee86f80c | Name: Microsoft.WindowsSearch.Commands.dll | Score: 100
+    Details: ["No standard '.text' code section found (renamed/packed)", 'Extremely few imports: 1 functions (likely packed)', '.NET executable']
+    Behaviors: [{'behavior': 'Evasion / Packing', 'indicators': ['Missing standard code section', 'Low imports count: 1']}]
+  Hash: 2e943bf695f885aa2cf0730d80e381b9fa5e585c1f48614f2d5bc8eae3e2294d | Name: Microsoft.WindowsSearch.Commands.Resources.dll | Score: 65
+    Details: ['Extremely few imports: 1 functions (likely packed)', '.NET executable']
+    Behaviors: [{'behavior': 'Evasion / Packing', 'indicators': ['Low imports count: 1']}]
+  Hash: 116f36e2a1a93cd4d726f6ae7ac8d4ee53db21239e60f217c03b492a1e1afad0 | Name: powershell_ise.resources.dll | Score: 120
+    Details: ['Extremely few imports: 1 functions (likely packed)', 'Suspicious strings count: 5', 'Obfuscated/Suspicious .NET executable']
+    Behaviors: [{'behavior': 'Evasion / Packing', 'indicators': ['Low imports count: 1']}, {'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [53]']}]
+  Hash: d8aa5671dc250e02e447ec62d6360c5bd743160079d9be49e3fe6fa425ac54d0 | Name: provpackageapi.dll | Score: 65
+    Details: ["Multiple evasion/debugging APIs: ['NtQueryInformationProcess', 'IsDebuggerPresent']", '.NET executable']
+    Behaviors: [{'behavior': 'Evasion / Anti-Debugging', 'indicators': ["APIs: ['NtQueryInformationProcess', 'IsDebuggerPresent']"]}, {'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [25, 53, 22, 23]']}]
+  Hash: da11e51b6867e233c9dab60cf0edd93410ec6c382acf853d0b79005d3735b03a | Name: pspluginwkr.dll | Score: 75
+    Details: ['Suspicious strings count: 5', 'Minor library discount: 8 functions exported', 'Obfuscated/Suspicious .NET executable']
+    Behaviors: [{'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [80, 22, 23]']}]
+  Hash: 4831a7d71c7822c7c87c337a23e2c5875a6bc9c8b002c991b7e68fd8a58f9cc7 | Name: RecoveryDrive.exe | Score: 75
+    Details: ['Behavior FSM threat state reached: INJECTING (+15 points)', 'VirtualAlloc with multiple evasion/enumeration APIs', "Multiple evasion/debugging APIs: ['NtQueryInformationProcess', 'IsDebuggerPresent']", 'Dynamic API resolution pattern (GetProcAddress + LoadLibrary + VirtualAlloc)']
+    Behaviors: [{'behavior': 'Process Injection / Hollowing', 'indicators': ["APIs: ['VirtualAlloc']"]}, {'behavior': 'Evasion / Anti-Debugging', 'indicators': ["APIs: ['NtQueryInformationProcess', 'IsDebuggerPresent']"]}, {'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [80, 25, 21, 53]']}]
+  Hash: eb40639c488a46f8b787ab4ebc7a4f712286971432f1e8675e993dcc4c778554 | Name: runonce.exe | Score: 60
+    Details: ['Behavior FSM threat state reached: INJECTING (+15 points)', "Single Process Injection API: ['ResumeThread']", "Multiple evasion/debugging APIs: ['NtQueryInformationProcess', 'IsDebuggerPresent']", 'Suspicious strings count: 4', 'Complexity discount: 33 DLLs imported', 'Modern Windows SDK discount: 23 API-set DLLs imported']
+    Behaviors: [{'behavior': 'Process Injection / Hollowing', 'indicators': ["APIs: ['ResumeThread']"]}, {'behavior': 'Evasion / Anti-Debugging', 'indicators': ["APIs: ['NtQueryInformationProcess', 'IsDebuggerPresent']"]}, {'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [53]']}]
+  Hash: 3da437b642468eafab7cd1b9dcf2cdf838b44c63fd73dae8e3e4d06ec187c0f3 | Name: smartscreen.exe | Score: 65
+    Details: ['Extremely high section entropy: 7.9654 (encrypted/packed)', "Single evasion/debugging API: ['IsDebuggerPresent']", 'Suspicious strings count: 1']
+    Behaviors: [{'behavior': 'Evasion / Packing', 'indicators': ['Entropy: 7.9654']}, {'behavior': 'Evasion / Anti-Debugging', 'indicators': ["APIs: ['IsDebuggerPresent']"]}, {'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [110, 80, 21, 53, 23, 22, 25]']}]
+  Hash: 619f1fe305c2a4002c172c6462e922099419d0817f92123e8b38ebe001875f90 | Name: SppExtComObj.Exe | Score: 85
+    Details: ['High section entropy: 7.5314', 'Low opcode density: 149 opcodes for 572928 bytes (wrapper/dropper)', 'Behavior FSM threat state reached: INJECTING (+15 points)', 'Dynamic API resolution pattern (GetProcAddress + LoadLibrary + VirtualAlloc)']
+    Behaviors: [{'behavior': 'Evasion / Packing', 'indicators': ['Entropy: 7.5314']}, {'behavior': 'Process Injection / Hollowing', 'indicators': ["APIs: ['VirtualAlloc']"]}, {'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [80, 23, 21, 53, 22, 25]']}]
+  Hash: 6a13dac8bd42767dad55d4c1ed4640f4e7f01abb08ca05ddcdc2c348fcd6f8b3 | Name: stordiag.exe | Score: 85
+    Details: ['Extremely few imports: 1 functions (likely packed)', 'Suspicious strings count: 1', 'Obfuscated/Suspicious .NET executable']
+    Behaviors: [{'behavior': 'Evasion / Packing', 'indicators': ['Low imports count: 1']}, {'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [25, 21, 22, 23]']}]
+  Hash: fe7c6d53bd1c68f92f138ae84ea81e045a930f7b7c585d445c3a67603e6eaddd | Name: ttdinject.exe | Score: 115
+    Details: ['Behavior FSM threat state reached: INJECTING (+15 points)', "Multiple Process Injection APIs: ['WriteProcessMemory', 'CreateRemoteThread', 'ResumeThread', 'VirtualAlloc', 'VirtualAllocEx']", "Single process enumeration API: ['CreateToolhelp32Snapshot']", "Multiple evasion/debugging APIs: ['NtQueryInformationProcess', 'IsDebuggerPresent']", 'Dynamic API resolution pattern (GetProcAddress + LoadLibrary + VirtualAlloc)']
+    Behaviors: [{'behavior': 'Process Injection / Hollowing', 'indicators': ["APIs: ['WriteProcessMemory', 'CreateRemoteThread', 'ResumeThread', 'VirtualAlloc', 'VirtualAllocEx']"]}, {'behavior': 'Evasion / Anti-Debugging', 'indicators': ["APIs: ['NtQueryInformationProcess', 'IsDebuggerPresent']"]}, {'behavior': 'Process Enumeration & Survey', 'indicators': ["APIs: ['CreateToolhelp32Snapshot']"]}, {'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [80, 25, 53, 23]']}]
+  Hash: 8763a79a27c8826a2d6cf7c7122d341ff849055c67c5b593856cbf1780b42e13 | Name: UIAutomationCore.dll | Score: 60
+    Details: ['Behavior FSM threat state reached: INJECTING (+15 points)', "Process Injection APIs: ['VirtualAlloc', 'VirtualAllocEx']", "Multiple evasion/debugging APIs: ['NtQueryInformationProcess', 'IsDebuggerPresent']", 'Dynamic API resolution pattern (GetProcAddress + LoadLibrary + VirtualAlloc)', 'Major library discount: 108 functions exported']
+    Behaviors: [{'behavior': 'Process Injection / Hollowing', 'indicators': ["APIs: ['VirtualAlloc', 'VirtualAllocEx']"]}, {'behavior': 'Evasion / Anti-Debugging', 'indicators': ["APIs: ['NtQueryInformationProcess', 'IsDebuggerPresent']"]}, {'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [80, 23, 21, 53, 22, 25]']}]
+  Hash: 8c1fabcc2196e4d096b7d155837c5f699ad7f55edbf84571e4f8e03500b7a8b0 | Name: vssadmin.exe | Score: 50
+    Details: ['High-risk strings found (e.g. shadow copies removal or AV exclusion)', 'Suspicious strings count: 2']
+    Behaviors: [{'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [25]']}, {'behavior': 'Ransomware / System Tampering', 'indicators': ['High-risk string referencing shadow copies removal or AV exclusion']}]
+  Hash: 45c2e5bd531a85f93278350b4b78434de5d52dfad0d058eb6c7d024cc027d01d | Name: VSSVC.exe | Score: 170
+    Details: ['Behavior FSM threat state reached: INJECTING (+15 points)', "Process Injection APIs: ['ResumeThread', 'VirtualAlloc']", "Multiple evasion/debugging APIs: ['NtQueryInformationProcess', 'IsDebuggerPresent']", 'Dynamic API resolution pattern (GetProcAddress + LoadLibrary + VirtualAlloc)', 'High-risk strings found (e.g. shadow copies removal or AV exclusion)', 'Suspicious strings count: 5']
+    Behaviors: [{'behavior': 'Process Injection / Hollowing', 'indicators': ["APIs: ['ResumeThread', 'VirtualAlloc']"]}, {'behavior': 'Evasion / Anti-Debugging', 'indicators': ["APIs: ['NtQueryInformationProcess', 'IsDebuggerPresent']"]}, {'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [80, 25, 53, 23]']}, {'behavior': 'Ransomware / System Tampering', 'indicators': ['High-risk string referencing shadow copies removal or AV exclusion']}]
+  Hash: 97448c6ae59a389e0aec5c62ccef112be44d5f648568680dc83962102f8475af | Name: WerFault.exe | Score: 120
+    Details: ['Behavior FSM threat state reached: INJECTING (+15 points)', 'VirtualAlloc with multiple evasion/enumeration APIs', 'Full process enumeration loop (Toolhelp32 loop, highly suspicious)', "Multiple evasion/debugging APIs: ['CheckRemoteDebuggerPresent', 'NtQueryInformationProcess', 'IsDebuggerPresent']", 'Dynamic API resolution pattern (GetProcAddress + LoadLibrary + VirtualAlloc)']
+    Behaviors: [{'behavior': 'Process Injection / Hollowing', 'indicators': ["APIs: ['VirtualAlloc']"]}, {'behavior': 'Evasion / Anti-Debugging', 'indicators': ["APIs: ['CheckRemoteDebuggerPresent', 'NtQueryInformationProcess', 'IsDebuggerPresent']"]}, {'behavior': 'Process Enumeration & Survey', 'indicators': ["APIs: ['Process32NextW', 'Process32FirstW', 'CreateToolhelp32Snapshot']", 'Full process loop (Toolhelp32)']}, {'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [80, 53, 22, 23, 25]']}]
+  Hash: dab6a977630816a6faef19920bfde12a97b771fcaaf1b83ea45f3e9f6b819565 | Name: WerFaultSecure.exe | Score: 100
+    Details: ['Elevated section entropy: 7.306', 'Behavior FSM threat state reached: INJECTING (+15 points)', 'VirtualAlloc with multiple evasion/enumeration APIs', "Single process enumeration API: ['CreateToolhelp32Snapshot']", "Multiple evasion/debugging APIs: ['NtQueryInformationProcess', 'IsDebuggerPresent']", 'Dynamic API resolution pattern (GetProcAddress + LoadLibrary + VirtualAlloc)']
+    Behaviors: [{'behavior': 'Evasion / Packing', 'indicators': ['Entropy: 7.3060']}, {'behavior': 'Process Injection / Hollowing', 'indicators': ["APIs: ['VirtualAlloc']"]}, {'behavior': 'Evasion / Anti-Debugging', 'indicators': ["APIs: ['NtQueryInformationProcess', 'IsDebuggerPresent']"]}, {'behavior': 'Process Enumeration & Survey', 'indicators': ["APIs: ['CreateToolhelp32Snapshot']"]}, {'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [80, 53, 22, 23, 25]']}]
+  Hash: 284f38524c26f39b1dd788210e7310c8df99efe8a420a031dc42247e75fc646e | Name: wermgr.exe | Score: 55
+    Details: ['Elevated section entropy: 7.3036', 'Behavior FSM threat state reached: SURVEY (+5 points)', 'Full process enumeration loop (Toolhelp32 loop, highly suspicious)', "Multiple evasion/debugging APIs: ['NtQueryInformationProcess', 'IsDebuggerPresent']", 'Complexity discount: 40 DLLs imported', 'Modern Windows SDK discount: 36 API-set DLLs imported']
+    Behaviors: [{'behavior': 'Evasion / Packing', 'indicators': ['Entropy: 7.3036']}, {'behavior': 'Evasion / Anti-Debugging', 'indicators': ["APIs: ['NtQueryInformationProcess', 'IsDebuggerPresent']"]}, {'behavior': 'Process Enumeration & Survey', 'indicators': ["APIs: ['Process32NextW', 'Process32FirstW', 'CreateToolhelp32Snapshot']", 'Full process loop (Toolhelp32)']}, {'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [80, 53, 22, 23, 25]']}]
+  Hash: 888ac24eeaea44fcf0aa54cab7df82c1ddd3a5cee500715763e5ca01e0b049ff | Name: winlogon.exe | Score: 105
+    Details: ['Behavior FSM threat state reached: INJECTING (+15 points)', "Multiple Process Injection APIs: ['ResumeThread', 'VirtualAlloc', 'CreateRemoteThread']", "Multiple evasion/debugging APIs: ['NtQueryInformationProcess', 'IsDebuggerPresent']", 'Dynamic API resolution pattern (GetProcAddress + LoadLibrary + VirtualAlloc)']
+    Behaviors: [{'behavior': 'Process Injection / Hollowing', 'indicators': ["APIs: ['ResumeThread', 'VirtualAlloc', 'CreateRemoteThread']"]}, {'behavior': 'Evasion / Anti-Debugging', 'indicators': ["APIs: ['NtQueryInformationProcess', 'IsDebuggerPresent']"]}, {'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [80, 53, 22, 23]']}]
+  Hash: ba4cd0f4be522225f9041c353c51b59bfde7d8232114de5cbf787334370aba6b | Name: winresume.exe | Score: 60
+    Details: ['Zero imports table (extreme anomaly, packed/shellcode)']
+    Behaviors: [{'behavior': 'Evasion / Packing', 'indicators': ['Low imports count: 0']}, {'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [80, 23, 21, 53, 22, 25]']}]
+  Hash: a9ae8a2751ed6465f70be55fa1d747f020e26bcc42d91105d93ffbcac6903a67 | Name: XpsRasterService.dll | Score: 70
+    Details: ['Extremely high section entropy: 7.9932 (encrypted/packed)', 'Behavior FSM threat state reached: INJECTING (+15 points)', "Single evasion/debugging API: ['IsDebuggerPresent']"]
+    Behaviors: [{'behavior': 'Evasion / Packing', 'indicators': ['Entropy: 7.9932']}, {'behavior': 'Process Injection / Hollowing', 'indicators': ["APIs: ['VirtualAlloc']"]}, {'behavior': 'Evasion / Anti-Debugging', 'indicators': ["APIs: ['IsDebuggerPresent']"]}, {'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [80, 23, 21, 53, 22, 25]']}]
+
+False Negatives Details:
+  Hash: 032690f113289d50b672fb3e95b64c801454e8e07fe3cdcb072efeaabcc7a374 | Name: 032690f113289d50b672fb3e95b64c801454e8e07fe3cdcb072efeaabcc7a374.exe | Score: 40
+    Details: ['Significant overlay detected (Size: 994457, Sections Raw Size Sum: 446976)', "Single evasion/debugging API: ['IsDebuggerPresent']"]
+    Behaviors: [{'behavior': 'Evasion / Anti-Debugging', 'indicators': ["APIs: ['IsDebuggerPresent']"]}, {'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [80, 23, 21, 53, 22, 25]']}]
+  Hash: 05bd182048dcc2fa83657555055a1240a52683f740e515b0d839a594ee50dd65 | Name: 05bd182048dcc2fa83657555055a1240a52683f740e515b0d839a594ee50dd65.exe | Score: 25
+    Details: ['Low opcode density: 10 opcodes for 158720 bytes (wrapper/dropper)']
+    Behaviors: [{'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [80, 21, 53, 22]']}]
+  Hash: 064cad19bee4580a82bc4ee3558e8510100ebba8da83720749f553cc411d5cb3 | Name: 064cad19bee4580a82bc4ee3558e8510100ebba8da83720749f553cc411d5cb3.exe | Score: 0
+    Details: []
+    Behaviors: []
+  Hash: 068af8016c36fce5cf1e1a4722c1dc0d6e02cb6ed58b61c2ba99a54d294cc274 | Name: 068af8016c36fce5cf1e1a4722c1dc0d6e02cb6ed58b61c2ba99a54d294cc274.exe | Score: 30
+    Details: ['High section entropy: 7.8139']
+    Behaviors: [{'behavior': 'Evasion / Packing', 'indicators': ['Entropy: 7.8139']}, {'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [80, 23, 21, 53, 22, 25]']}]
+  Hash: 07b9bd35d94b627cd2124f21985d2af0bde4a763857d476c02ccacee1a7b00e5 | Name: 07b9bd35d94b627cd2124f21985d2af0bde4a763857d476c02ccacee1a7b00e5.exe | Score: 30
+    Details: ['High section entropy: 7.6438']
+    Behaviors: [{'behavior': 'Evasion / Packing', 'indicators': ['Entropy: 7.6438']}, {'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [80, 23, 21, 53, 22, 25, 445]']}]
+  Hash: 11bd2f957e6e59703bd92d284c5c832c109b40b8a5842d3983f870906618f8f2 | Name: 11bd2f957e6e59703bd92d284c5c832c109b40b8a5842d3983f870906618f8f2.dll | Score: 40
+    Details: ['High section entropy: 7.6519', "Single evasion/debugging API: ['IsDebuggerPresent']"]
+    Behaviors: [{'behavior': 'Evasion / Packing', 'indicators': ['Entropy: 7.6519']}, {'behavior': 'Evasion / Anti-Debugging', 'indicators': ["APIs: ['IsDebuggerPresent']"]}, {'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [80, 23, 21, 53, 22, 25]']}]
+  Hash: 1283285b7d4791bacfcbd29c8d579785b75a636d1e1866d8219600a353bb8973 | Name: 1283285b7d4791bacfcbd29c8d579785b75a636d1e1866d8219600a353bb8973.exe | Score: 45
+    Details: ['Extremely high section entropy: 7.9682 (encrypted/packed)']
+    Behaviors: [{'behavior': 'Evasion / Packing', 'indicators': ['Entropy: 7.9682']}, {'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [80, 25, 22, 23]']}]
+  Hash: 1294e6cce4285225612898a4fbc75a640e69dc0f246af698e2c91d48ad2d61b8 | Name: 1294e6cce4285225612898a4fbc75a640e69dc0f246af698e2c91d48ad2d61b8.exe | Score: 0
+    Details: []
+    Behaviors: [{'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [80, 23, 21, 53, 22, 25]']}]
+  Hash: 184e53af04ff158a22facbe4499694223462bfed7d6c96e83ec1be69272348e4 | Name: 184e53af04ff158a22facbe4499694223462bfed7d6c96e83ec1be69272348e4.dll | Score: 40
+    Details: ['High section entropy: 7.6704', "Single evasion/debugging API: ['IsDebuggerPresent']"]
+    Behaviors: [{'behavior': 'Evasion / Packing', 'indicators': ['Entropy: 7.6704']}, {'behavior': 'Evasion / Anti-Debugging', 'indicators': ["APIs: ['IsDebuggerPresent']"]}, {'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [80, 23, 21, 53, 22, 25]']}]
+  Hash: 238dcc5611ed9066b63d2d0109c9b623f54f8d7b61d5f9de59694cfc60a4e646 | Name: 238dcc5611ed9066b63d2d0109c9b623f54f8d7b61d5f9de59694cfc60a4e646.dll | Score: 40
+    Details: ['High section entropy: 7.661', "Single evasion/debugging API: ['IsDebuggerPresent']"]
+    Behaviors: [{'behavior': 'Evasion / Packing', 'indicators': ['Entropy: 7.6610']}, {'behavior': 'Evasion / Anti-Debugging', 'indicators': ["APIs: ['IsDebuggerPresent']"]}, {'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [80, 23, 21, 53, 22, 25]']}]
+  Hash: 2d8856aec0a87d0ecafd5abe350d27d96b4e7cb6a769399de69a0ee3d7a9d34a | Name: 2d8856aec0a87d0ecafd5abe350d27d96b4e7cb6a769399de69a0ee3d7a9d34a.exe | Score: 40
+    Details: ['High section entropy: 7.7153', "Single evasion/debugging API: ['IsDebuggerPresent']"]
+    Behaviors: [{'behavior': 'Evasion / Packing', 'indicators': ['Entropy: 7.7153']}, {'behavior': 'Evasion / Anti-Debugging', 'indicators': ["APIs: ['IsDebuggerPresent']"]}, {'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [80, 23, 21, 53, 22, 25]']}]
+  Hash: 3749a8b0d8d636d871c0fe6712d3e1d01a57e3076a6d41afe3d64b7b2420982a | Name: 3749a8b0d8d636d871c0fe6712d3e1d01a57e3076a6d41afe3d64b7b2420982a.exe | Score: 25
+    Details: ['Low opcode density: 54 opcodes for 154745 bytes (wrapper/dropper)']
+    Behaviors: [{'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [80, 23, 21, 53, 22]']}]
+  Hash: 472e9a07fcee1f2943e4e447bf7775edeaaad9070166d1396d7171fcd196911b | Name: 472e9a07fcee1f2943e4e447bf7775edeaaad9070166d1396d7171fcd196911b.exe | Score: 35
+    Details: ['Low opcode density: 1 opcodes for 761856 bytes (wrapper/dropper)', "Single evasion/debugging API: ['IsDebuggerPresent']"]
+    Behaviors: [{'behavior': 'Evasion / Anti-Debugging', 'indicators': ["APIs: ['IsDebuggerPresent']"]}, {'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [80, 23, 21, 53, 22, 25]']}]
+  Hash: 5398021213a4e2d98a3eec3b19d4e14458ed62400eaeb3e329c9d287c0ca8b02 | Name: 5398021213a4e2d98a3eec3b19d4e14458ed62400eaeb3e329c9d287c0ca8b02.exe | Score: 40
+    Details: ['Elevated section entropy: 7.3746', 'High ADD instruction ratio: 34.55%']
+    Behaviors: [{'behavior': 'Evasion / Packing', 'indicators': ['Entropy: 7.3746']}, {'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [80, 23, 21, 53, 22, 25]']}]
+  Hash: 597fc22a39550c674c3be03b2ba21d9c54571389744d8240a7a1f416bdd2b4a9 | Name: 597fc22a39550c674c3be03b2ba21d9c54571389744d8240a7a1f416bdd2b4a9.exe | Score: 10
+    Details: ["Single evasion/debugging API: ['IsDebuggerPresent']"]
+    Behaviors: [{'behavior': 'Evasion / Anti-Debugging', 'indicators': ["APIs: ['IsDebuggerPresent']"]}, {'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [80, 53, 22, 23, 25]']}]
+  Hash: 5cba3f7da36c19bc48ceb0fd6424877d5659472fb2a19b7063e5b381aade699c | Name: 5cba3f7da36c19bc48ceb0fd6424877d5659472fb2a19b7063e5b381aade699c.exe | Score: 40
+    Details: ['Behavior FSM threat state reached: INJECTING (+15 points)', "Single evasion/debugging API: ['IsDebuggerPresent']", 'Dynamic API resolution pattern (GetProcAddress + LoadLibrary + VirtualAlloc)']
+    Behaviors: [{'behavior': 'Process Injection / Hollowing', 'indicators': ["APIs: ['VirtualAlloc']"]}, {'behavior': 'Evasion / Anti-Debugging', 'indicators': ["APIs: ['IsDebuggerPresent']"]}, {'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [80, 23, 21, 53, 22, 25]']}]
+  Hash: 5d29cc33d90b21321625dca2d097b4d5015b1f4ff955422ea0c51442ac27e1e3 | Name: 5d29cc33d90b21321625dca2d097b4d5015b1f4ff955422ea0c51442ac27e1e3.exe | Score: 35
+    Details: ["No standard '.text' code section found (renamed/packed)"]
+    Behaviors: [{'behavior': 'Evasion / Packing', 'indicators': ['Missing standard code section']}, {'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [80, 21]']}]
+  Hash: 608876df58ef20d0c0586e42a87d9a423f1fcc23959bcb47055aadfb05739b91 | Name: 608876df58ef20d0c0586e42a87d9a423f1fcc23959bcb47055aadfb05739b91.exe | Score: 35
+    Details: ["No standard '.text' code section found (renamed/packed)"]
+    Behaviors: [{'behavior': 'Evasion / Packing', 'indicators': ['Missing standard code section']}, {'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [80, 25, 21, 23]']}]
+  Hash: 64a4841d45667fa254a4498cc60c7ebcb14e5078b7e33538735f7d93171de5a3 | Name: 64a4841d45667fa254a4498cc60c7ebcb14e5078b7e33538735f7d93171de5a3.exe | Score: 25
+    Details: ['Virtual size vs Raw size mismatch (likely packed)']
+    Behaviors: [{'behavior': 'Evasion / Packing', 'indicators': ['Virtual/Raw size mismatch']}, {'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [110, 80, 21, 53, 23, 22, 25]']}]
+  Hash: 6ffd1b8b7c4912b4fb0bdb1437371a1e761854092fb0c3e4934d32e9a30d9f38 | Name: 6ffd1b8b7c4912b4fb0bdb1437371a1e761854092fb0c3e4934d32e9a30d9f38.exe | Score: 25
+    Details: ['High ADD instruction ratio: 39.01%']
+    Behaviors: [{'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [25, 21, 22, 23]']}]
+  Hash: 7b1c5147c903892f8888f91c98097c89e419ddcc89958a33e294e6dd192b6d4e | Name: 7b1c5147c903892f8888f91c98097c89e419ddcc89958a33e294e6dd192b6d4e.dll | Score: 40
+    Details: ['High section entropy: 7.6519', "Single evasion/debugging API: ['IsDebuggerPresent']"]
+    Behaviors: [{'behavior': 'Evasion / Packing', 'indicators': ['Entropy: 7.6519']}, {'behavior': 'Evasion / Anti-Debugging', 'indicators': ["APIs: ['IsDebuggerPresent']"]}, {'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [80, 23, 21, 53, 22, 25]']}]
+  Hash: 88c9bd2ec09ddec7b103660c9dd8b3afc2c72ecc469bd327106c598e1f58a520 | Name: 88c9bd2ec09ddec7b103660c9dd8b3afc2c72ecc469bd327106c598e1f58a520.exe | Score: 30
+    Details: ['Extremely few imports: 3 functions (likely packed)']
+    Behaviors: [{'behavior': 'Evasion / Packing', 'indicators': ['Low imports count: 3']}]
+  Hash: 8ed71986b28af6facf58d6d47d1190459d95427d0b0d92f32b25de3cd0755f2c | Name: 8ed71986b28af6facf58d6d47d1190459d95427d0b0d92f32b25de3cd0755f2c.dll | Score: 30
+    Details: ['Elevated section entropy: 7.2476', 'Behavior FSM threat state reached: INJECTING (+15 points)', "Single Process Injection API: ['VirtualAlloc']", 'Minor library discount: 6 functions exported']
+    Behaviors: [{'behavior': 'Evasion / Packing', 'indicators': ['Entropy: 7.2476']}, {'behavior': 'Process Injection / Hollowing', 'indicators': ["APIs: ['VirtualAlloc']"]}, {'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [80, 23, 21, 53, 22, 25]']}]
+  Hash: 97d42a6167fca8ccbe00a0e37eee7784a72ba495fa55decbe95f692eb480c893 | Name: 97d42a6167fca8ccbe00a0e37eee7784a72ba495fa55decbe95f692eb480c893.exe | Score: 40
+    Details: ['High section entropy: 7.7031', 'Suspicious strings count: 1']
+    Behaviors: [{'behavior': 'Evasion / Packing', 'indicators': ['Entropy: 7.7031']}, {'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [80, 23, 21, 53, 22, 25, 445]']}]
+  Hash: 98734d3ad1484aaa9405652bf8952e5f429e1298710647d6be3f9a2a53dc48ca | Name: 98734d3ad1484aaa9405652bf8952e5f429e1298710647d6be3f9a2a53dc48ca.dll | Score: 40
+    Details: ['High section entropy: 7.661', "Single evasion/debugging API: ['IsDebuggerPresent']"]
+    Behaviors: [{'behavior': 'Evasion / Packing', 'indicators': ['Entropy: 7.6610']}, {'behavior': 'Evasion / Anti-Debugging', 'indicators': ["APIs: ['IsDebuggerPresent']"]}, {'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [80, 23, 21, 53, 22, 25]']}]
+  Hash: 98d8b13f297953a0b4f915e55cd527f0f1461d42b917b77aa99f05446f6fdd12 | Name: 98d8b13f297953a0b4f915e55cd527f0f1461d42b917b77aa99f05446f6fdd12.exe | Score: 0
+    Details: []
+    Behaviors: [{'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [80, 23, 21, 53, 22, 25]']}]
+  Hash: a66004cf8bde5bf53dc67389023b59a97e32f5c50c8820921bb179cf05e1a94c | Name: a66004cf8bde5bf53dc67389023b59a97e32f5c50c8820921bb179cf05e1a94c.exe | Score: 30
+    Details: ['Extremely few imports: 2 functions (likely packed)']
+    Behaviors: [{'behavior': 'Evasion / Packing', 'indicators': ['Low imports count: 2']}, {'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [25]']}]
+  Hash: aab9e3d3f923f7c17694df3bd395aea1112f87e63580c1762579c43056d3b2da | Name: aab9e3d3f923f7c17694df3bd395aea1112f87e63580c1762579c43056d3b2da.dll | Score: 40
+    Details: ['High section entropy: 7.6704', "Single evasion/debugging API: ['IsDebuggerPresent']"]
+    Behaviors: [{'behavior': 'Evasion / Packing', 'indicators': ['Entropy: 7.6704']}, {'behavior': 'Evasion / Anti-Debugging', 'indicators': ["APIs: ['IsDebuggerPresent']"]}, {'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [80, 23, 21, 53, 22, 25]']}]
+  Hash: aebff5134e07a1586b911271a49702c8623b8ac8da2c135d4d3b0145a826f507 | Name: aebff5134e07a1586b911271a49702c8623b8ac8da2c135d4d3b0145a826f507.dll | Score: 30
+    Details: ['Elevated section entropy: 7.2476', 'Behavior FSM threat state reached: INJECTING (+15 points)', "Single Process Injection API: ['VirtualAlloc']", 'Minor library discount: 6 functions exported']
+    Behaviors: [{'behavior': 'Evasion / Packing', 'indicators': ['Entropy: 7.2476']}, {'behavior': 'Process Injection / Hollowing', 'indicators': ["APIs: ['VirtualAlloc']"]}, {'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [80, 23, 21, 53, 22, 25]']}]
+  Hash: b05e4d408f5731b0bb0c194570a3c86a31ce291ec70b54e1e76ecd5bc9bee3f7 | Name: b05e4d408f5731b0bb0c194570a3c86a31ce291ec70b54e1e76ecd5bc9bee3f7.exe | Score: 25
+    Details: ['Low opcode density: 93 opcodes for 138240 bytes (wrapper/dropper)']
+    Behaviors: [{'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [80, 23, 21, 53, 22, 25]']}]
+  Hash: b586710da7aeb32217a3d2c138fc085a0ef2cb50c7a7206f94fb9877d688b521 | Name: b586710da7aeb32217a3d2c138fc085a0ef2cb50c7a7206f94fb9877d688b521.exe | Score: 25
+    Details: ['Low opcode density: 57 opcodes for 577536 bytes (wrapper/dropper)']
+    Behaviors: [{'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [80, 23]']}]
+  Hash: bc8b29f27771d4f8c16ce6e81b180ca85627b7b6217a7ee5560679317c772ce9 | Name: bc8b29f27771d4f8c16ce6e81b180ca85627b7b6217a7ee5560679317c772ce9.exe | Score: 40
+    Details: ['Decryption loop FSM triggered (potential self-decryption loop)', 'Elevated section entropy: 7.4085']
+    Behaviors: [{'behavior': 'Evasion / Packing', 'indicators': ['Entropy: 7.4085', 'Decryption loop FSM triggered']}, {'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [80, 21, 53, 22, 25]']}]
+  Hash: cda6c311657239f3d20b579bdfa125fe39ec1155e0e688d962fe80d4bc5761ef | Name: cda6c311657239f3d20b579bdfa125fe39ec1155e0e688d962fe80d4bc5761ef.exe | Score: 0
+    Details: []
+    Behaviors: [{'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [80, 23, 21, 53, 22]']}]
+  Hash: cdefe04ff6ea56f6bd8d69648e9603a8ed6db07e90349592062ce1829693bbc5 | Name: cdefe04ff6ea56f6bd8d69648e9603a8ed6db07e90349592062ce1829693bbc5.dll | Score: 45
+    Details: ['Extremely high section entropy: 7.9464 (encrypted/packed)']
+    Behaviors: [{'behavior': 'Evasion / Packing', 'indicators': ['Entropy: 7.9464']}, {'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [80, 23, 21, 53, 22, 25]']}]
+  Hash: ce742b7cc94a5c668116d343b6a9677523dc13b358294bba3cd248fba8b880da | Name: ce742b7cc94a5c668116d343b6a9677523dc13b358294bba3cd248fba8b880da.exe | Score: 25
+    Details: ['High ADD instruction ratio: 35.37%']
+    Behaviors: [{'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [80, 53, 22, 23]']}]
+  Hash: d0183ef7b6efd3a68c5d77b9e56a9a5011b37d390e7220c635c9da4e0211c936 | Name: d0183ef7b6efd3a68c5d77b9e56a9a5011b37d390e7220c635c9da4e0211c936.dll | Score: 40
+    Details: ['High section entropy: 7.6519', "Single evasion/debugging API: ['IsDebuggerPresent']"]
+    Behaviors: [{'behavior': 'Evasion / Packing', 'indicators': ['Entropy: 7.6519']}, {'behavior': 'Evasion / Anti-Debugging', 'indicators': ["APIs: ['IsDebuggerPresent']"]}, {'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [80, 23, 21, 53, 22, 25]']}]
+  Hash: d122c989fe69f0912e7fb2aa838d6eb83995c86b6986f7b9e20fbea287e91ed4 | Name: d122c989fe69f0912e7fb2aa838d6eb83995c86b6986f7b9e20fbea287e91ed4.exe | Score: 0
+    Details: []
+    Behaviors: [{'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [80, 21, 53, 22, 25]']}]
+  Hash: d26495a0b13b29e753e31f35dcc7d3d630aae2c163365de519f895e678c65b13 | Name: d26495a0b13b29e753e31f35dcc7d3d630aae2c163365de519f895e678c65b13.dll | Score: 45
+    Details: ['Extremely high section entropy: 7.9729 (encrypted/packed)']
+    Behaviors: [{'behavior': 'Evasion / Packing', 'indicators': ['Entropy: 7.9729']}, {'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [80, 23, 21, 53, 22, 25, 445]']}]
+  Hash: dd2b6e3aa75de8460730862f2dc739537734a7dfc9e673b6a23ee58430348ddf | Name: dd2b6e3aa75de8460730862f2dc739537734a7dfc9e673b6a23ee58430348ddf.dll | Score: 40
+    Details: ['High section entropy: 7.661', "Single evasion/debugging API: ['IsDebuggerPresent']"]
+    Behaviors: [{'behavior': 'Evasion / Packing', 'indicators': ['Entropy: 7.6610']}, {'behavior': 'Evasion / Anti-Debugging', 'indicators': ["APIs: ['IsDebuggerPresent']"]}, {'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [80, 23, 21, 53, 22, 25]']}]
+  Hash: e2f79f7022d4655c65ec6a660967f2ea01d1fab4199b9413cb20b86cb712b0ce | Name: e2f79f7022d4655c65ec6a660967f2ea01d1fab4199b9413cb20b86cb712b0ce.exe | Score: 35
+    Details: ['Virtual size vs Raw size mismatch (likely packed)', 'Suspicious strings count: 1']
+    Behaviors: [{'behavior': 'Evasion / Packing', 'indicators': ['Virtual/Raw size mismatch']}, {'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [80, 23, 21, 53, 22, 25]']}]
+  Hash: e8adeee1736ee068f79284077ec905137051eaed11f0be53cc1977f30edb3102 | Name: e8adeee1736ee068f79284077ec905137051eaed11f0be53cc1977f30edb3102.exe | Score: 40
+    Details: ['Significant overlay detected (Size: 568324, Sections Raw Size Sum: 52224)', 'Suspicious strings count: 1']
+    Behaviors: [{'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [80, 23, 21, 53, 22, 25]']}]
+  Hash: f831d088c3a64b06843d970337f1c8877c9c1988d56720a7dee9d67efeaf78f0 | Name: f831d088c3a64b06843d970337f1c8877c9c1988d56720a7dee9d67efeaf78f0.exe | Score: 30
+    Details: ['High section entropy: 7.599']
+    Behaviors: [{'behavior': 'Evasion / Packing', 'indicators': ['Entropy: 7.5990']}, {'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [80]']}]
+  Hash: fa3d1e0d938aea74098020ca657c0e138a88a25c267a90730cb603780621fb14 | Name: fa3d1e0d938aea74098020ca657c0e138a88a25c267a90730cb603780621fb14.exe | Score: 0
+    Details: ['No executable sections found (data or resource file)']
+    Behaviors: []
+  Hash: ffc39c3fdbe06c62d04f4853fd2f0dda2e745a2886776b2ee39418c53d764441 | Name: ffc39c3fdbe06c62d04f4853fd2f0dda2e745a2886776b2ee39418c53d764441.dll | Score: 25
+    Details: ['Decryption loop FSM triggered (potential self-decryption loop)']
+    Behaviors: [{'behavior': 'Evasion / Packing', 'indicators': ['Decryption loop FSM triggered']}, {'behavior': 'Network Backdoor / Command & Control', 'indicators': ['Constants referencing common ports: [80, 23, 21, 53, 22, 25]']}]
