@@ -118,23 +118,22 @@ Malicious software (malware) continues to grow in volume and sophistication. Mal
 \subsection{Objectives}
 The primary objectives of this project are:
 \begin{enumerate}
-    \item To design and implement a static analysis tool that extracts header info, section details, import lists, and disassembly mnemonics from Portable Executable (PE) files.
+    \item To design and implement a static analysis tool that extracts header info, section details, import lists, and disassembly mnemonics from Portable Executable (PE) and raw assembly source (\texttt{.asm}) files.
     \item To implement Finite State Machines (FSMs) capable of identifying anti-analysis behavior and unpacking sequences.
     \item To construct a weight-based heuristic scoring engine that aggregates structural anomaly markers to classify files as benign or malware.
     \item To evaluate the engine's capability against a curated dataset of benign files and wild malware samples.
 \end{enumerate}
 
 \subsection{Project Scope}
-The project targets Windows executable files, specifically 32-bit and 64-bit binaries in the Portable Executable (\texttt{.exe}, \texttt{.dll}, \texttt{.sys}) format. It extracts static features from both the structural headers and the disassemblable code segment (\texttt{.text}). The system does not execute the samples, ensuring malware is analyzed inside a secure sandbox containment.
+The project targets Windows executable files, specifically 32-bit and 64-bit binaries in the Portable Executable (\texttt{.exe}, \texttt{.dll}, \texttt{.sys}) format, as well as raw x86/x64 assembly source text (\texttt{.asm}) files. It extracts static features from either the PE structural headers, the disassemblable code segment (\texttt{.text}), or directly from the raw assembly statements in source files. The system does not execute any files, ensuring malware is analyzed inside a secure sandbox containment.
 
 \subsection{Methodology}
 The methodology consists of four sequential phases:
 \begin{itemize}
     \item \textbf{Dataset Acquisition}: Pulling live malware samples securely from the MalwareBazaar API (belonging to families such as AgentTesla, Mirai, WannaCry, AsyncRAT, RedLineStealer) and compiling benign samples from standard Windows directories.
-    \item \textbf{Feature Extraction}: Using the \texttt{pefile} library to read PE structure headers, and the \texttt{capstone} engine to disassemble executable bytes within the code segment into x86/x64 instruction opcodes.
-    \item \textbf{Heuristic Rule Evaluation}: Feeding the extracted structural features and instruction n-grams into a combined heuristic model that applies scoring weights, evaluates FSM transitions, and adjusts metrics based on normal system complexities.
+    \item \textbf{Feature Extraction}: Using the \texttt{pefile} library to read PE structure headers, the \texttt{capstone} engine to disassemble compiled bytes within binary code segments into instruction opcodes, or regular-expression text parsing to extract mnemonics, strings, and constants from text-based \texttt{.asm} source files.
+    \item \textbf{Heuristic Rule Evaluation}: Feeding the extracted structural features and instruction n-grams into a combined heuristic model that applies scoring weights, evaluates FSM transitions, and adjusts metrics based on file types (binary vs. source) and normal system complexities.
     \item \textbf{Evaluation and Validation}: Benchmarking accuracy, precision, recall, and F1-score across benign and malware groups, and conducting error analysis on false classifications.
-
 \end{itemize}
 
 \newpage
@@ -191,7 +190,13 @@ To statically detect packed or obfuscated binaries, the engine inspects indicato
 \subsection{Assembly and Disassembly}
 Assembly involves converting assembly language into machine code (binary format). Disassembly does the opposite: it translates raw binary bytes back into a stream of human-readable assembly instructions. 
 
-In static analysis, disassembling the \texttt{.text} section allows us to inspect instruction sequences. By tracking the frequencies of instruction opcodes, the engine can find patterns typical of compilers or malware:
+In static analysis, processing assembly data depends on the file type:
+\begin{itemize}
+    \item \textbf{Binary Disassembly}: For compiled executables, disassembling the \texttt{.text} section using the \texttt{Capstone} engine allows us to inspect instruction sequences and register profiles.
+    \item \textbf{Source Text Ingestion}: For raw \texttt{.asm} files, disassembly is unnecessary. Instead, the engine employs text tokenization and regular-expression filters to isolate opcodes, string declarations, and port constants directly.
+\end{itemize}
+
+By tracking the frequencies of instruction opcodes, the engine can find patterns typical of compilers or malware:
 \begin{itemize}
     \item \textbf{Instruction Frequencies}: A very high ratio of \texttt{add} instructions (e.g., $>30\%$) is often seen in aligned memory zones or obfuscated math routines.
     \item \textbf{Opcodes N-grams}: Analyzing sequential blocks of instructions (e.g. 3-grams) allows us to identify signature patterns like decryption loops or virtual machines.
@@ -390,7 +395,7 @@ The system consists of independent layers, as illustrated in the block diagram i
 \centering
 \begin{tikzpicture}[node distance=1.8cm, every node/.style={font=\scriptsize}]
     \node (dataset) [process] {\textbf{Dataset Module}\\(\texttt{dataset.py})\\Downloads \& unpacks samples};
-    \node (samples) [decision, right of=dataset, xshift=1.8cm] {Raw PE Binary / password-protected ZIP};
+    \node (samples) [decision, right of=dataset, xshift=1.8cm] {Raw PE / .asm / password-protected ZIP};
     \node (pe) [process, above right of=samples, xshift=1.2cm, yshift=0.8cm] {\textbf{PE Parser}\\(\texttt{pe\_extractor.py})\\Entropy, Sections, Imports, Headers};
     \node (asm) [process, below right of=samples, xshift=1.2cm, yshift=-0.8cm] {\textbf{ASM Parser}\\(\texttt{asm\_extractor.py})\\Capstone Disassembler, Opcodes, N-grams, Strings};
     \node (engine) [process, right of=samples, xshift=4.2cm] {\textbf{Heuristic Engine}\\(\texttt{engine.py}, \texttt{rules.py})\\Scoring, Behavior FSM, Decryption Loop FSM};
@@ -413,13 +418,13 @@ The system consists of independent layers, as illustrated in the block diagram i
 Implements multi-threaded query wrappers querying the Abuse.ch MalwareBazaar API. It searches for specific signatures: AgentTesla (Trojan), Mirai (Botnet), WannaCry, LockBit, Phobos (Ransomware), RedLineStealer (Spyware), QakBot, Emotet (Worms), and AsyncRAT (RATs). Downloads the raw malware binaries wrapped in AES-encrypted ZIP containers using the default password \texttt{infected}.
 
 \subsubsection{PE Feature Extractor (\texttt{pe\_extractor.py})}
-Reads target executables (handling both standard binaries and password-protected \texttt{.zip} files using the default password \texttt{infected}) to extract structural features. It scans both the \texttt{benign} and \texttt{malware} directories under the dataset root and generates separate \texttt{benign\_pe\_features.json} and \texttt{malware\_pe\_features.json} files in the output directory. It parses the NT header directories, checks the number of sections, calculates the Shannon entropy for each individual section, builds the Import Address Table (IAT) mapping, and parses dynamic/static imports and exports.
+Reads target files (handling standard binaries, password-protected \texttt{.zip} files, and text-based \texttt{.asm} files). It scans both the \texttt{benign} and \texttt{malware} directories under the dataset root and generates separate \texttt{benign\_pe\_features.json} and \texttt{malware\_pe\_features.json} files in the output directory. For compiled executables, it parses the NT header directories, checks the number of sections, calculates the Shannon entropy for each individual section, builds the Import Address Table (IAT) mapping, and parses dynamic/static imports and exports. For raw \texttt{.asm} files, it bypasses binary header parsing, returns a skeleton layout, and performs a regular-expression text search to capture occurrences of monitored Windows APIs, mapping them to a mock imports registry.
 
 \subsubsection{ASM Feature Extractor (\texttt{asm\_extractor.py})}
-Disassembles target executable files (handling both standard binaries and password-protected \texttt{.zip} files using the default password \texttt{infected}) from both the \texttt{benign} and \texttt{malware} dataset subfolders. It disassembles the \texttt{.text} section bytes, initializing a Capstone disassembly session (\texttt{Cs(CS\_ARCH\_X86, CS\_MODE\_32)}) to extract instructions, opcodes, top 30 most common mnemonics, 3-gram instruction sequences, suspicious strings, and embedded constants for common ports. The output is written to separate \texttt{benign\_asm\_features.json} and \texttt{malware\_asm\_features.json} files in the output directory.
+Extracts code instructions, constants, and string constants. For compiled binaries, it disassembles the \texttt{.text} section bytes, initializing a Capstone disassembly session (\texttt{Cs(CS\_ARCH\_X86, CS\_MODE\_32)}) to extract instructions, opcodes, top 30 most common mnemonics, 3-gram instruction sequences, suspicious strings, and embedded constants for common ports. For raw \texttt{.asm} text files, it parses instruction mnemonics, quoted string definitions, and numeric constants. Additionally, it scans for byte and data declarations (such as \texttt{db}, \texttt{dw}, and \texttt{dd} arrays), compiles them into a binary payload buffer, and runs a Capstone disassembly session over the compiled payload buffer to decode hidden or nested instructions (like shellcode) and extract hidden strings using regular expressions. The output is written to separate \texttt{benign\_asm\_features.json} and \texttt{malware\_asm\_features.json} files in the output directory.
 
 \subsubsection{Detection Engine (\texttt{engine.py} \& \texttt{rules.py})}
-Processes the PE and ASM features. It feeds instruction 3-grams to the \texttt{DecryptionLoopFSM} and API names to the \texttt{BehaviorFSM}. Next, it applies the heuristic weight matrix, factors in DLL complexity discounts, and computes the final threat score and malware probability.
+Processes the PE and ASM features. It feeds instruction 3-grams to the \texttt{DecryptionLoopFSM} and API names to the \texttt{BehaviorFSM}. Next, it applies the heuristic weight matrix, factors in DLL complexity discounts, and computes the final threat score and malware probability. It checks whether the file is raw assembly source code; if so, it skips binary-specific heuristics (section layout constraints, raw-vs-virtual sizes, entropy limits, zero-import lists, and raw opcode densities) and scores the sample solely based on behavioral instruction ratios, FSM states, and high-risk strings.
 
 \subsubsection{Evaluation Module (\texttt{evaluate.py})}
 Loads and merges the extracted PE and ASM feature registries (\texttt{benign\_pe\_features.json}, \texttt{malware\_pe\_features.json}, \texttt{benign\_asm\_features.json}, and \texttt{malware\_asm\_features.json}). It has been updated to resolve the output directory and feature paths dynamically relative to its own file path on disk (using \texttt{\_\_file\_\_}), guaranteeing portability even if the project is renamed or moved. It feeds each sample to the heuristic engine, evaluates classification metrics (Accuracy, Precision, Recall, and F1-score), outputs performance statistics, and lists false classifications with details on why they occurred.
@@ -431,20 +436,23 @@ Loads and merges the extracted PE and ASM feature registries (\texttt{benign\_pe
 % ==============================================================================
 
 \subsection{Dataset Summary}
-The performance of the heuristic engine was validated against a large-scale static features database containing $1,797$ samples:
+The quantitative benchmarks of the heuristic engine were validated against a large-scale static features database containing $1,797$ compiled binary samples:
 \begin{itemize}
     \item \textbf{Benign Samples}: 993 legitimate Windows executables, DLLs, and system drivers.
     \item \textbf{Malware Samples}: 804 wild malware binaries collected securely from MalwareBazaar.
 \end{itemize}
 
+Additionally, qualitative verification of the engine was conducted using raw x86 assembly source code (\texttt{.asm}) samples containing simulated malicious API workflows, decryption loop signatures, and high-risk administrative strings.
+
 \subsection{Engine Optimization and Tuning}
-To resolve high false negative and false positive rates observed in the initial heuristic scoring model, five key engine optimizations were designed and implemented in \texttt{engine.py}:
+To resolve high false negative and false positive rates observed in the initial heuristic scoring model, six key engine optimizations were designed and implemented in \texttt{engine.py}:
 \begin{enumerate}
     \item \textbf{Corrected .NET DLL Identification}: Checked for both \texttt{\_CorExeMain} and \texttt{\_CorDllMain} to properly identify .NET DLLs. x86-specific opcode metrics (such as the ADD ratio and Decryption FSM) are skipped for .NET binaries, as CLI metadata naturally disassembles into fake x86 instructions.
     \item \textbf{Dropper Heuristics}: Added a new high-precision rule: if a binary imports resource extraction APIs and process creation APIs, and its resource section (\texttt{.rsrc}) ratio exceeds 70\% of the file size, it is classified as a dropper (+45 points).
     \item \textbf{Driver Handling}: Reduced the process control capability penalty for drivers to +20 and applied a driver whitelist discount (-40 points) to standard system drivers (\texttt{.sys}), which naturally use elevated APIs.
     \item \textbf{High-Entropy Bypass}: Skipped library and complexity discounts for files with very high section entropy ($>7.5$), preventing packed malware from mimicking standard system DLL exports to evade flags.
     \item \textbf{Zero Imports Entropy Check}: Restricted the \texttt{Zero imports table} penalty (+60 points) to files with section entropy $>6.0$, letting clean resource-only DLLs bypass the penalty.
+    \item \textbf{Assembly Source Code Evaluation}: Integrated a dedicated text-parsing engine for raw assembly source (\texttt{.asm}) files. Bypasses compiled-binary PE checks (such as section properties, raw section size anomalies, entropy thresholds, zero-import tables, and low opcode densities) to prevent false positives and format parser crashes, while preserving instruction ratio, FSM, and string matches.
 \end{enumerate}
 
 \subsection{Detection Metrics Comparison}

@@ -60,7 +60,7 @@ def extract_pe_info(file_path, data=None):
                 with pyzipper.AESZipFile(file_path) as z:
                     for name in z.namelist():
                         inner_data = z.read(name, pwd=ZIP_PASSWORD)
-                        features = extract_pe_info(file_path, data=inner_data)
+                        features = extract_pe_info(name, data=inner_data)
                         if "file_info" in features and features["file_info"]:
                             features["file_info"]["file_name"] = name
                         return features
@@ -68,7 +68,7 @@ def extract_pe_info(file_path, data=None):
                 with zipfile.ZipFile(file_path) as z:
                     for name in z.namelist():
                         inner_data = z.read(name, pwd=ZIP_PASSWORD)
-                        features = extract_pe_info(file_path, data=inner_data)
+                        features = extract_pe_info(name, data=inner_data)
                         if "file_info" in features and features["file_info"]:
                             features["file_info"]["file_name"] = name
                         return features
@@ -89,6 +89,52 @@ def extract_pe_info(file_path, data=None):
         }
     except Exception as e:
         return {"error": f"Failed to compute file hashes/info: {e}"}
+
+    if file_path.lower().endswith('.asm'):
+        # Skeleton features for assembly source code to bypass pefile parsing
+        try:
+            if data is not None:
+                text = data.decode(errors='ignore')
+            else:
+                with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
+                    text = f.read()
+        except Exception:
+            text = ""
+
+        # Scan for API names
+        detected_apis = []
+        try:
+            import re
+            import sys
+            current_dir = os.path.dirname(os.path.abspath(__file__))
+            src_dir = os.path.dirname(current_dir)
+            detector_dir = os.path.join(src_dir, "detector")
+            if detector_dir not in sys.path:
+                sys.path.append(detector_dir)
+            import rules
+
+            all_monitored = (
+                rules.INJECTION_APIS | 
+                rules.NETWORK_APIS | 
+                rules.EVASION_APIS | 
+                rules.PROCESS_ENUM_APIS | 
+                rules.ADVANCED_DEBUG_APIS
+            )
+            # Find all word tokens in the text
+            words = set(w.lower() for w in re.findall(r'\b[a-zA-Z0-9_]+\b', text))
+            # Match against monitored APIs
+            detected_apis = [w for w in words if w in all_monitored]
+        except Exception as e:
+            print(f"[-] Error loading rules/extracting APIs in pe_extractor: {e}")
+
+        features["headers"] = {}
+        features["sections"] = []
+        features["imports"] = {
+            "source_imports": detected_apis
+        }
+        features["exports"] = []
+        features["is_source_code"] = True
+        return features
 
     try:
         if data is not None:

@@ -99,10 +99,12 @@ class MalwareDetector:
         score = 0
         details = []
 
+        is_source = pe_features.get("is_source_code", False)
+
         sections = pe_features.get("sections", [])
         has_execute_section = any("EXECUTE" in sec.get("characteristics", []) for sec in sections)
 
-        if not has_execute_section:
+        if not is_source and not has_execute_section:
             return 0, ["No executable sections found (data or resource file)"], []
 
         # Extract imports early
@@ -135,7 +137,7 @@ class MalwareDetector:
             details.append("Decryption loop FSM triggered (potential self-decryption loop)")
 
         opcode_count = asm_features.get("opcode_count", 0)
-        if opcode_count == 0:
+        if not is_source and opcode_count == 0:
             score += 35
             details.append("No standard '.text' code section found (renamed/packed)")
 
@@ -172,54 +174,57 @@ class MalwareDetector:
             if ".rsrc" in sec_name_lower:
                 rsrc_size = vsize
 
-        if max_entropy > 7.9:
-            score += 45
-            details.append(f"Extremely high section entropy: {max_entropy} (encrypted/packed)")
-        elif max_entropy > 7.5:
-            score += 30
-            details.append(f"High section entropy: {max_entropy}")
-        elif max_entropy > 7.1:
-            score += 15
-            details.append(f"Elevated section entropy: {max_entropy}")
+        if not is_source:
+            if max_entropy > 7.9:
+                score += 45
+                details.append(f"Extremely high section entropy: {max_entropy} (encrypted/packed)")
+            elif max_entropy > 7.5:
+                score += 30
+                details.append(f"High section entropy: {max_entropy}")
+            elif max_entropy > 7.1:
+                score += 15
+                details.append(f"Elevated section entropy: {max_entropy}")
 
-        if has_wx:
-            score += 35
-            details.append("W^X violation")
-        if has_mismatch:
-            score += 25
-            details.append("Virtual size vs Raw size mismatch (likely packed)")
-        if has_susp_sec:
-            score += 35
-            details.append("Suspicious section name")
-        if has_slash_sec:
-            score += 35
-            details.append("Section name starts with '/' (obfuscated/compiler anomaly)")
+            if has_wx:
+                score += 35
+                details.append("W^X violation")
+            if has_mismatch:
+                score += 25
+                details.append("Virtual size vs Raw size mismatch (likely packed)")
+            if has_susp_sec:
+                score += 35
+                details.append("Suspicious section name")
+            if has_slash_sec:
+                score += 35
+                details.append("Section name starts with '/' (obfuscated/compiler anomaly)")
 
         # Overlay Check
         file_size = pe_features.get("file_info", {}).get("file_size_bytes", 0)
         sum_raw_size = sum(sec.get("raw_size", 0) for sec in sections)
         
-        if file_size > sum_raw_size + 3000000 and file_size > 4000000:
-            score += 55
-            details.append(f"Massive overlay detected (Size: {file_size}, Sections Raw Size Sum: {sum_raw_size})")
-        elif file_size > sum_raw_size + 150000 and file_size > 500000:
-            score += 30
-            details.append(f"Significant overlay detected (Size: {file_size}, Sections Raw Size Sum: {sum_raw_size})")
+        if not is_source:
+            if file_size > sum_raw_size + 3000000 and file_size > 4000000:
+                score += 55
+                details.append(f"Massive overlay detected (Size: {file_size}, Sections Raw Size Sum: {sum_raw_size})")
+            elif file_size > sum_raw_size + 150000 and file_size > 500000:
+                score += 30
+                details.append(f"Significant overlay detected (Size: {file_size}, Sections Raw Size Sum: {sum_raw_size})")
 
-        # Low opcode density check (packed binary indication) - skip for DLLs
-        if not is_dll and 0 < opcode_count < 300 and file_size > 50000:
-            score += 25
-            details.append(f"Low opcode density: {opcode_count} opcodes for {file_size} bytes (wrapper/dropper)")
+            # Low opcode density check (packed binary indication) - skip for DLLs
+            if not is_dll and 0 < opcode_count < 300 and file_size > 50000:
+                score += 25
+                details.append(f"Low opcode density: {opcode_count} opcodes for {file_size} bytes (wrapper/dropper)")
 
         # Imports complexity rules
-        if dll_count == 0:
-            # Resource/metadata only files with zero imports and low entropy should not be penalized
-            if max_entropy > 6.0:
-                score += 60
-                details.append("Zero imports table (extreme anomaly, packed/shellcode)")
-        elif func_count < 5:
-            score += 30
-            details.append(f"Extremely few imports: {func_count} functions (likely packed)")
+        if not is_source:
+            if dll_count == 0:
+                # Resource/metadata only files with zero imports and low entropy should not be penalized
+                if max_entropy > 6.0:
+                    score += 60
+                    details.append("Zero imports table (extreme anomaly, packed/shellcode)")
+            elif func_count < 5:
+                score += 30
+                details.append(f"Extremely few imports: {func_count} functions (likely packed)")
 
         # API categorization
         injection_found = []

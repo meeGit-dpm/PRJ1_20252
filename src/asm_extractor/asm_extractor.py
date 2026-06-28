@@ -344,6 +344,112 @@ def calculate_hashes(file_path, data=None):
         "sha1": sha1.hexdigest(),
         "sha256": sha256.hexdigest()
     }
+def extract_bytes_from_db(line):
+    # Match db/dw/dd declarations
+    # e.g., db 0x90, 0xeb, 0x19
+    # or db "cmd.exe", 0
+    # or db 'http://...'
+    m = re.match(r'^\s*(?:db|dw|dd)\s+(.+)$', line, re.IGNORECASE)
+    if not m:
+        return b""
+    
+    parts = m.group(1).split(',')
+    line_bytes = bytearray()
+    for part in parts:
+        part = part.strip()
+        if not part:
+            continue
+        # Check if it's a quoted string
+        str_match = re.match(r'^["\']([^"\']*)["\']$', part)
+        if str_match:
+            line_bytes.extend(str_match.group(1).encode('utf-8', errors='ignore'))
+        else:
+            # Check if numeric constant (hex, dec, or bin)
+            try:
+                if part.lower().startswith('0x'):
+                    val = int(part, 16)
+                elif part.lower().endswith('h'):
+                    val = int(part[:-1], 16)
+                else:
+                    val = int(part)
+                # Append as bytes
+                if 0 <= val < 256:
+                    line_bytes.append(val)
+            except ValueError:
+                pass
+    return bytes(line_bytes)
+
+
+def extract_asm_from_text(filepath, data=None):
+    """
+    Extract opcodes, strings, and constants from an assembly (.asm) text file.
+    Uses the Capstone engine to disassemble any binary bytes declared via db/dw/dd statements.
+    """
+    opcodes = []
+    strings = []
+    constants = []
+    binary_payload = bytearray()
+    
+    try:
+        if data is not None:
+            text = data.decode(errors='ignore')
+        else:
+            with open(filepath, 'r', encoding='utf-8', errors='ignore') as f:
+                text = f.read()
+                
+        # Simple line-by-line parsing
+        lines = text.splitlines()
+        for line in lines:
+            # Clean comments starting with ;
+            line = line.split(';')[0].strip()
+            if not line:
+                continue
+                
+            # 1. Extract raw bytes from db/dw/dd directives
+            line_bytes = extract_bytes_from_db(line)
+            if line_bytes:
+                binary_payload.extend(line_bytes)
+                
+            # 2. Extract strings from double/single quotes
+            for s in re.findall(r'"([^"]*)"|\'([^\']*)\'', line):
+                val = s[0] if s[0] else s[1]
+                if len(val) >= 4:
+                    strings.append(val)
+                    
+            # 3. Extract numeric constants
+            for num_str in re.findall(r'\b\d+\b', line):
+                constants.append(int(num_str))
+                
+            # 4. Clean labels and extract instruction mnemonics
+            line_no_label = re.sub(r'^[a-zA-Z0-9_@\.\$]+:', '', line).strip()
+            m = re.match(r'^([a-zA-Z]{2,6})\b', line_no_label)
+            if m:
+                op = m.group(1).lower()
+                # Ignore common assembly pseudo-ops / directives
+                if op not in {"db", "dw", "dd", "dq", "dt", "section", "segment", "global", "extern", "equ", "org", "align", "include", "end", "use32", "use64"}:
+                    opcodes.append(op)
+
+        # Disassemble binary payload using Capstone
+        if binary_payload:
+            try:
+                md = Cs(CS_ARCH_X86, CS_MODE_32)
+                for ins in md.disasm(bytes(binary_payload), 0x1000):
+                    opcodes.append(ins.mnemonic)
+            except Exception as e:
+                print(f"[-] Capstone error disassembling payload in {filepath}: {e}")
+
+            # Run Regex string extraction on assembled binary payload
+            try:
+                for s in re.findall(rb"[\x20-\x7E]{4,}", bytes(binary_payload)):
+                    decoded = s.decode(errors='ignore')
+                    if decoded not in strings:
+                        strings.append(decoded)
+            except Exception:
+                pass
+    except Exception as e:
+        print(f"[-] Error parsing text ASM file {filepath}: {e}")
+        
+    return opcodes, strings, constants
 
 
 def extract_asm_features(filepath, data=None):
@@ -354,7 +460,7 @@ def extract_asm_features(filepath, data=None):
                 with pyzipper.AESZipFile(filepath) as z:
                     for name in z.namelist():
                         inner_data = z.read(name, pwd=ZIP_PASSWORD)
-                        features = extract_asm_features(filepath, data=inner_data)
+                        features = extract_asm_features(name, data=inner_data)
                         if "file_info" in features and features["file_info"]:
                             features["file_info"]["file_name"] = name
                         return features
@@ -362,7 +468,7 @@ def extract_asm_features(filepath, data=None):
                 with zipfile.ZipFile(filepath) as z:
                     for name in z.namelist():
                         inner_data = z.read(name, pwd=ZIP_PASSWORD)
-                        features = extract_asm_features(filepath, data=inner_data)
+                        features = extract_asm_features(name, data=inner_data)
                         if "file_info" in features and features["file_info"]:
                             features["file_info"]["file_name"] = name
                         return features
@@ -370,11 +476,12 @@ def extract_asm_features(filepath, data=None):
             print(f"[-] Error extracting zip {filepath}: {e}")
             return {}
 
-    opcodes = extract_opcodes(filepath, data=data)
-
-    strings = extract_strings(filepath, data=data)
-
-    constants = extract_constants(filepath, data=data)
+    if filepath.lower().endswith('.asm'):
+        opcodes, strings, constants = extract_asm_from_text(filepath, data=data)
+    else:
+        opcodes = extract_opcodes(filepath, data=data)
+        strings = extract_strings(filepath, data=data)
+        constants = extract_constants(filepath, data=data)
 
     try:
         file_info = {
@@ -586,7 +693,7 @@ if __name__ == "__main__":
         if os.path.exists(folder_path):
             for root, dirs, files in os.walk(folder_path):
                 for file in files:
-                    if file.lower().endswith(('.exe', '.dll', '.sys', '.zip')):
+                    if file.lower().endswith(('.exe', '.dll', '.sys', '.zip', '.asm')):
                         files_to_analyze.append(os.path.join(root, file))
 
         output_file = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "output", f"{category}_asm_features.json"))

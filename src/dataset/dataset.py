@@ -61,27 +61,26 @@ def save_hash(sha256):
     downloaded_hashes.add(sha256)
 
 
-def is_windows_pe(entry):
+def is_supported_format(entry):
     """
-    Filter only PE executables.
+    Filter PE executables and assembly source code files.
     """
 
     file_type = str(entry.get("file_type", "")).lower()
     file_name = str(entry.get("file_name", "")).lower()
 
-    pe_keywords = [
+    target_keywords = [
         "exe",
         "dll",
-        "pe"
+        "pe",
+        "asm",
+        "assembly"
     ]
 
-    if any(x in file_type for x in pe_keywords):
+    if any(x in file_type for x in target_keywords):
         return True
 
-    if file_name.endswith(".exe"):
-        return True
-
-    if file_name.endswith(".dll"):
+    if file_name.endswith((".exe", ".dll", ".sys", ".asm")):
         return True
 
     return False
@@ -219,12 +218,12 @@ def main():
                 if sha256 in downloaded_hashes:
                     continue
 
-                if not is_windows_pe(sample):
+                if not is_supported_format(sample):
                     continue
 
                 candidates.append(sha256)
 
-            print(f"PE candidates: {len(candidates)}")
+            print(f"Candidates: {len(candidates)}")
 
             output_path = os.path.join(OUTPUT_DIR, type)
             existing = len(os.listdir(output_path)) if os.path.exists(output_path) else 0
