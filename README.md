@@ -1,20 +1,6 @@
-# Heuristic Malware Detection & Feature Extraction System
+#  Malware Detection & Feature Extraction System
 
 A static-analysis based heuristic malware detection system written in Python. This project provides utilities to download malware samples, extract PE headers and disassembly (assembly instructions) features, and statically classify files as benign or malware using heuristic rule matching and Finite State Machines (FSMs).
-
-## Table of Contents
-- [Project Architecture](#project-architecture)
-- [Requirements & Installation](#requirements--installation)
-- [Usage Instructions](#usage-instructions)
-  - [1. Downloading Malware Dataset](#1-downloading-malware-dataset)
-  - [2. Extracting PE Features](#2-extracting-pe-features)
-  - [3. Extracting Assembly Features](#3-extracting-assembly-features)
-  - [4. Evaluating & Scanning Files](#4-evaluating--scanning-files)
-- [Detection Engine Heuristics](#detection-engine-heuristics)
-  - [State Machines (FSM)](#state-machines-fsm)
-  - [Static Analysis & Heuristics](#static-analysis--heuristics)
-
----
 
 ## Project Architecture
 
